@@ -374,7 +374,7 @@ class LineSep extends ColorRect:
 				item.position.y = position.y + size.y
 
 				if next_line:
-					item.size.y = next_line.get_current_position().y - item.position.y
+					item.size.y = next_line.position.y - item.position.y
 				else:
 					item.size.y = get_parent().size.y - item.position.y
 		else:
@@ -388,7 +388,7 @@ class LineSep extends ColorRect:
 				item.position.x = diff
 
 				if next_line:
-					item.size.x = next_line.get_current_position().x - item.position.x
+					item.size.x = next_line.position.x - item.position.x
 				else:
 					item.size.x = get_parent().size.x - item.position.x
 
@@ -413,7 +413,7 @@ class LineSep extends ColorRect:
 			offset = maxf(offset, -(initial_position.y - min_size_offset))
 
 			if next_line:
-				var val : float = next_line.get_current_position().y - (initial_position.y + size.y + min_size_offset)
+				var val : float = next_line.position.y - (initial_position.y + size.y + min_size_offset)
 				if offset > val:
 					offset = val
 			else:
@@ -421,7 +421,7 @@ class LineSep extends ColorRect:
 				if offset > val:
 					offset = val
 			if prev_line:
-				var val : float = -(initial_position.y - (prev_line.get_current_position().y + prev_line.size.y + prev_line.min_size_offset))
+				var val : float = -(initial_position.y - (prev_line.position.y + prev_line.size.y + prev_line.min_size_offset))
 
 				if offset < val:
 					offset = val
@@ -434,15 +434,15 @@ class LineSep extends ColorRect:
 			position.y = initial_position.y + offset
 
 			for line : LineSep in top_lines:
-				line.size.y = get_current_position().y - line.get_current_position().y
+				line.size.y = position.y - line.position.y
 
 			for line : LineSep in bottom_lines:
 				line.position.y = position.y + size.y
 
 				if next_line:
-					line.size.y = next_line.get_current_position().y - line.position.y
+					line.size.y = next_line.position.y - line.position.y
 				else:
-					line.size.y = get_parent().size.y - line.get_current_position().y
+					line.size.y = get_parent().size.y - line.position.y
 		else:
 			min_size_offset = 0.0
 			for x : Control in bottom_items:
@@ -458,7 +458,7 @@ class LineSep extends ColorRect:
 			offset = maxf(offset, -initial_position.x)
 
 			if next_line:
-				var val : float = next_line.get_current_position().x - (initial_position.x + size.x + min_size_offset)
+				var val : float = next_line.position.x - (initial_position.x + size.x + min_size_offset)
 				if offset > val:
 					offset = val
 			else:
@@ -466,7 +466,7 @@ class LineSep extends ColorRect:
 				if offset > val:
 					offset = val
 			if prev_line:
-				var val : float = -(initial_position.x - (prev_line.get_current_position().x + prev_line.size.x + prev_line.min_size_offset))
+				var val : float = -(initial_position.x - (prev_line.position.x + prev_line.size.x + prev_line.min_size_offset))
 
 				if offset < val:
 					offset = val
