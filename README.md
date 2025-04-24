@@ -1,6 +1,8 @@
 # Multi-Split-Container
 Allow splitting elements into containers with the same size in the canvas rectangle.
 
+<a href="https://www.buymeacoffee.com/twister" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174" border-radius="25"></a>
+
 [![Godot Engine 4.3](https://img.shields.io/badge/Godot_Engine-4.x-blue)](https://godotengine.org/) ![ToolHack](https://img.shields.io/badge/Tool-Addon-green) ![Copyrights License](https://img.shields.io/badge/License-MIT-blue)
 
 >[!NOTE]
