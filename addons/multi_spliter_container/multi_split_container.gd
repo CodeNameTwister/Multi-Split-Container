@@ -863,7 +863,7 @@ func _update() -> void:
 				break
 
 func _on_enter(n : Node) -> void:
-	if n is SplitContainerItem:
+	if n is SplitContainerItem or (n is Control and !Engine.is_editor_hint()):
 		if !n.visibility_changed.is_connected(_on_visible):
 			n.visibility_changed.connect(_on_visible)
 		if is_node_ready():
@@ -875,7 +875,7 @@ func _on_visible() -> void:
 	update()
 
 func _on_exiting(n : Node) -> void:
-	if n is SplitContainerItem:
+	if n is SplitContainerItem or (n is Control and !Engine.is_editor_hint()):
 		if is_node_ready():
 			for x : int in range(separators_line_offsets.size()):
 				separators_line_offsets[x] = 0.0
