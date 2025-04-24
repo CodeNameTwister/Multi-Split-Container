@@ -6,8 +6,18 @@ Allow splitting elements into containers with the same size in the canvas rectan
 >[!NOTE]
 >This plugin was initially created to be used by [script-spliter <= v0.2](https://github.com/CodeNameTwister/Script-Spliter) addon.
 
+# Features
+* Auto Split in columns by child node count. (Work with nodes with base as Control)
+* Auto Split in rows by you row value setted.
+* Lines Size/Color Changeables.
+* Drag Button Size/Color Changeables.
+* Drag Button Icon Changeables.
+
+
 # Preview
+### image Example Scene.
 ![image_preview1](images/example.png)
+### image Example Scene before/after move splited container by drag buttons.
 ![image_preview2](images/example_full.png)
 
 # How Work
