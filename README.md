@@ -10,7 +10,7 @@ Allow splitting elements into containers with the same size in the canvas rectan
 
 # Features
 * Auto Split in columns by child node count. (Work on nodes with base as Control)
-* Auto Split in rows by you row value setted.
+* Auto Split in rows by you max columns value setted.
 * Lines Size/Color Changeables.
 * Drag Button Size/Color Changeables.
 * Drag Button Icon Changeables.

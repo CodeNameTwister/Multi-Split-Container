@@ -31,11 +31,15 @@ func _on_child_entered_tree(n : Node) -> void:
 	if n is Control:
 		if !n.gui_input.is_connected(_on_gui_input):
 			n.gui_input.connect(_on_gui_input)
+	for x : Node in n.get_children():
+		_on_child_entered_tree(x)
 
 func _on_child_exiting_tree(n : Node) -> void:
 	if n is Control:
 		if n.gui_input.is_connected(_on_gui_input):
 			n.gui_input.disconnect(_on_gui_input)
+	for x : Node in n.get_children():
+		_on_child_exiting_tree(x)
 
 	if get_child_count() > 0:
 		if get_child(0) != n:
