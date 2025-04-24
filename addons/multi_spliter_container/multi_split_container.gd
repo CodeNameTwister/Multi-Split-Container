@@ -360,7 +360,7 @@ class LineSep extends ColorRect:
 
 	func reset() -> void:
 		position = initial_position
-		offset = 0.0
+		#offset = 0.0
 		update_items()
 
 	func update_items() -> void:
@@ -767,7 +767,7 @@ func _update() -> void:
 
 			x.initial_position = vpos
 			x.initial_position.y -= (vline_size.y) / 2.0
-			x.offset = 0.0
+			#x.offset = 0.0
 			x.position = x.initial_position
 
 			x.button.size = Vector2(drag_button_size, drag_button_size)
@@ -804,7 +804,7 @@ func _update() -> void:
 
 		x.initial_position = vpos
 		x.initial_position.x -= (line_size.x) / 2.0
-		x.offset = 0.0
+		#x.offset = 0.0
 
 		x.button.size = Vector2(drag_button_size, drag_button_size)
 		#if drag_button_offset_size != 0.0:
@@ -850,8 +850,8 @@ func _update() -> void:
 			l.button.min_no_focus_transparense = min_visible_drag_button
 			l.button.set_drag_icon(drag_button_icon)
 
-			#l.force_update()
-			l.reset()
+			l.force_update()
+			#l.reset()
 
 		if !Engine.is_editor_hint():
 			separators_line_offsets.clear()
