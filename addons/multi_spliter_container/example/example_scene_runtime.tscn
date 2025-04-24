@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwmmpb30w0bue"]
+
+[ext_resource type="Script" uid="uid://tpl2mn7ig66b" path="res://addons/multi_spliter_container/example/example_scene_runtime.gd" id="1_117hh"]
+[ext_resource type="Script" uid="uid://db6mrqis6mthu" path="res://addons/multi_spliter_container/multi_split_container.gd" id="2_iutt7"]
+
+[node name="ExampleSceneChilds" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_117hh")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press Play Button"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MultiSplitContainer" type="Container" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_iutt7")
+max_columns = 5
+separator_line_color = Color(0.21, 0.24, 0.29, 1)
+drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
+metadata/_custom_type_script = "uid://db6mrqis6mthu"
