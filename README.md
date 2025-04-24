@@ -6,7 +6,7 @@ Allow splitting elements into containers with the same size in the canvas rectan
 [![Godot Engine 4.3](https://img.shields.io/badge/Godot_Engine-4.x-blue)](https://godotengine.org/) ![ToolHack](https://img.shields.io/badge/Tool-Addon-green) ![Copyrights License](https://img.shields.io/badge/License-MIT-blue)
 
 >[!NOTE]
->This plugin was initially created to be used by [script-spliter <= v0.2](https://github.com/CodeNameTwister/Script-Spliter) addon.
+>This plugin was initially created to be used by [script-spliter v0.2](https://github.com/CodeNameTwister/Script-Spliter) addon.
 
 # Features
 * Auto Split in columns by child node count. (Work on nodes with base as Control)
