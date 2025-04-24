@@ -17,9 +17,9 @@ Allow splitting elements into containers with the same size in the canvas rectan
 
 
 # Preview
-### image Example Scene.
+### Image Example Scene.
 ![image_preview1](images/example.png)
-### image Example Scene before/after move splited container by drag buttons.
+### Image Example Scene before/after move splited container by drag buttons.
 ![image_preview2](images/example_full.png)
 
 # How Work
