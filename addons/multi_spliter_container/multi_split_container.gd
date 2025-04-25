@@ -52,6 +52,18 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 		for l : LineSep in _separators:
 			l.visible = separator_line_visible
 
+@export_subgroup("Behaviour", "behaviour_")
+
+## Enable function for auto expand lines container on inside focus.
+@export var behaviour_expand_on_focus : bool = true
+
+## Enable function for auto expand lines container on double click in the line.
+@export var behaviour_expand_on_double_click : bool = true:
+	set(e):
+		behaviour_expand_on_double_click = e
+		for l : LineSep in _separators:
+			l.double_click_handler = behaviour_expand_on_double_click
+
 ## Custom initial offset for separator lines. (TODO: Still Working here!)
 @export var separators_line_offsets : Array[float] :
 	set(e):
@@ -159,6 +171,9 @@ func expand_splited_container(node : Node) -> void:
 	if _last_container_focus == node:
 		return
 	_last_container_focus = node
+
+	if !behaviour_expand_on_focus:
+		return
 
 	var top_lines : Array[LineSep] = []
 	var bottom_lines : Array[LineSep] = []
@@ -284,7 +299,7 @@ class DragButton extends Button:
 	func _on_input(e : InputEvent) -> void:
 		if e is InputEventMouseButton:
 			if e.pressed and e.double_click:
-				if _line_sep:
+				if _line_sep and _line_sep.double_click_handler:
 					_line_sep.offset = 0.0
 					_line_sep.offset_updated.emit()
 			elif e.pressed and e.button_index == 1:
@@ -371,6 +386,8 @@ class LineSep extends ColorRect:
 	var next_line : LineSep = null
 
 	var button : DragButton = null
+
+	var double_click_handler : bool = true
 
 	func set_next_line(next : LineSep = null) -> void:
 		next_line = next
@@ -852,6 +869,7 @@ func _update() -> void:
 		for l : LineSep in _separators:
 			l.visible = separator_line_visible
 			l.color = separator_line_color
+			l.double_click_handler = behaviour_expand_on_double_click
 			l.button.self_modulate = drag_button_modulate
 			l.button.min_no_focus_transparense = min_visible_drag_button
 			l.button.set_drag_icon(drag_button_icon)
@@ -869,6 +887,7 @@ func _update() -> void:
 		for l : LineSep in _separators:
 			l.visible = separator_line_visible
 			l.color = separator_line_color
+			l.double_click_handler = behaviour_expand_on_double_click
 			l.button.self_modulate = drag_button_modulate
 			l.button.min_no_focus_transparense = min_visible_drag_button
 			l.button.set_drag_icon(drag_button_icon)
