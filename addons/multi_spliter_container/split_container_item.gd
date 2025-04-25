@@ -31,6 +31,21 @@ func _on_child_entered_tree(n : Node) -> void:
 	if n is Control:
 		if !n.gui_input.is_connected(_on_gui_input):
 			n.gui_input.connect(_on_gui_input)
+	if Engine.is_editor_hint():
+		if n.owner == null:
+			if owner != null:
+				n.owner = owner
+			else:
+				var parent : Node = n.get_parent()
+				var current : Node = parent
+				while current != null:
+					parent = current
+					if parent.owner:
+						n.owner = parent.owner
+						break
+					current = current.get_parent()
+				if n.owner == null and parent != null:
+					n.owner =  n.get_parent()
 	for x : Node in n.get_children():
 		_on_child_entered_tree(x)
 

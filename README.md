@@ -20,7 +20,7 @@ Allow splitting elements into containers with the same size in the canvas rectan
 
 # Preview
 ### Image Example Scene.
-![image_preview1](images/example.png)
+[![video preview](https://github.com/CodeNameTwister/Misc/blob/main/media/video/gd_msc.png?raw=true)](https://youtu.be/5JU3snjbRMU)
 ### Image Example Scene before/after move splited container by drag buttons.
 ![image_preview2](images/example_full.png)
 
