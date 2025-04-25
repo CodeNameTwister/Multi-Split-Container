@@ -17,9 +17,17 @@ func _on_gui_input(input : InputEvent) -> void:
 	if input.is_pressed():
 		show_splited_container()
 
-func _init() -> void:
+func _ready() -> void:
+
 	size_flags_horizontal = Control.SIZE_FILL
 	size_flags_vertical = Control.SIZE_FILL
+
+	set_deferred(&"anchor_left", 0.0)
+	set_deferred(&"aanchor_top", 0.0)
+	set_deferred(&"aanchor_bottom", 1.0)
+	set_deferred(&"aanchor_right", 1.0)
+
+func _init() -> void:
 	name = "SplitContainerItem"
 
 	gui_input.connect(_on_gui_input)

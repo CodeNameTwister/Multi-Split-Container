@@ -310,11 +310,9 @@ class DragButton extends Button:
 				set_process(false)
 			modulate.a = lerp(modulate.a, min_no_focus_transparense, _frm)
 		if _is_pressed:
-			var viewport : Viewport = get_viewport()
-			if is_instance_valid(viewport):
-				var mpos : Vector2 = viewport.get_mouse_position()
-				if mpos != get_rect().get_center():
-					_line_sep.update_offset_by_position(mpos)
+			var mpos : Vector2 = _line_sep.get_parent().get_local_mouse_position()
+			if mpos != get_rect().get_center():
+				_line_sep.update_offset_by_position(mpos)
 
 class UndoredoSplit extends RefCounted:
 	var object : SplitContainerItem = null
@@ -538,7 +536,8 @@ func _undoredo_do(ur : UndoredoSplit) -> void:
 		ur.object = container
 
 func _recuva(x : Node, _owner : Node) -> void:
-	x.owner = _owner
+	if x.owner == null:
+		x.owner = _owner
 	for z : Node in x.get_children():
 		if z.owner == null:
 			z.owner = _owner
@@ -578,9 +577,8 @@ func _update() -> void:
 						continue
 				else:
 					var container : SplitContainerItem = SplitContainerItem.new()
-					remove_child(x)
+					#remove_child(x)
 
-					container.add_child(x)
 					add_child(container, true)
 
 					if Engine.is_editor_hint():
@@ -613,6 +611,8 @@ func _update() -> void:
 						else:
 							_recuva(container, self)
 
+					#container.add_child(x)
+					x.reparent(container)
 					x = container
 
 
@@ -851,7 +851,6 @@ func _update() -> void:
 			l.button.set_drag_icon(drag_button_icon)
 
 			l.force_update()
-			#l.reset()
 
 		if !Engine.is_editor_hint():
 			separators_line_offsets.clear()
@@ -916,12 +915,13 @@ func _ready() -> void:
 	separator_line_color = separator_line_color
 	drag_button_modulate = drag_button_modulate
 
-	var parent : Node = get_parent()
-	if parent is Control:
-		size = parent.size
-
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical =Control.SIZE_EXPAND_FILL
+
+	set_deferred(&"anchor_left", 0.0)
+	set_deferred(&"aanchor_top", 0.0)
+	set_deferred(&"aanchor_bottom", 1.0)
+	set_deferred(&"aanchor_right", 1.0)
 
 	if Engine.is_editor_hint():
 		draw.connect(_on_draw)
