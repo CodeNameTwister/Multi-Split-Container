@@ -45,7 +45,7 @@ func _on_child_entered_tree(n : Node) -> void:
 						break
 					current = current.get_parent()
 				if n.owner == null and parent != null:
-					n.owner =  n.get_parent()
+					n.owner = parent
 	for x : Node in n.get_children():
 		_on_child_entered_tree(x)
 
