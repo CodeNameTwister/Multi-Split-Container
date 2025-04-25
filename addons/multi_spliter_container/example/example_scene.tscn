@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bsf5475jlmf12"]
+[gd_scene load_steps=5 format=3 uid="uid://bsf5475jlmf12"]
 
 [ext_resource type="Script" uid="uid://db6mrqis6mthu" path="res://addons/multi_spliter_container/multi_split_container.gd" id="1_erthe"]
 [ext_resource type="Script" uid="uid://beplmlbkjbofd" path="res://addons/multi_spliter_container/split_container_item.gd" id="2_jlu11"]
 [ext_resource type="Texture2D" uid="uid://cwvyucfkxwjqw" path="res://addons/multi_spliter_container/icon/MultiSpliterItem.svg" id="3_geasv"]
+[ext_resource type="Texture2D" uid="uid://bjaei3q7x2hux" path="res://addons/multi_spliter_container/icon/MultiSpliter.svg" id="4_flrsd"]
 
 [node name="Example" type="Container"]
 anchors_preset = 15
@@ -14,9 +15,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_erthe")
 max_columns = 3
-separator_line_size = 24.0
+separator_line_size = 23.085
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
-separators_line_offsets = Array[float]([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 drag_button_size = 32.0
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 
@@ -75,6 +75,15 @@ clip_contents = true
 layout_mode = 2
 script = ExtResource("2_jlu11")
 
+[node name="ColorRect2" type="ColorRect" parent="SplitContainerItem3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.630427, 0.698456, 1)
+
 [node name="Label" type="Label" parent="SplitContainerItem3"]
 layout_mode = 1
 anchors_preset = 15
@@ -85,15 +94,6 @@ grow_vertical = 2
 text = "Also change drag button size and color"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="ColorRect2" type="ColorRect" parent="SplitContainerItem3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0.630427, 0.698456, 1)
 
 [node name="SplitContainerItem4" type="Control" parent="."]
 clip_contents = true
@@ -213,6 +213,36 @@ so split by rows count defined"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="SplitContainerItem8" type="Control" parent="."]
+clip_contents = true
+layout_mode = 2
+script = ExtResource("2_jlu11")
+
+[node name="MarginContainer" type="MarginContainer" parent="SplitContainerItem8"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="SplitContainerItem8/MarginContainer"]
+layout_mode = 2
+color = Color(0.22928, 0.144101, 0.436279, 1)
+
+[node name="TextureRect" type="TextureRect" parent="SplitContainerItem8/MarginContainer"]
+modulate = Color(0.489622, 0.489622, 0.489622, 1)
+layout_mode = 2
+texture = ExtResource("4_flrsd")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="SplitContainerItem8/MarginContainer"]
+layout_mode = 2
+text = "SplitContainerItem is a simple container
+You can add in child whatever you want"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="SplitContainerItem9" type="Control" parent="."]
 clip_contents = true
 layout_mode = 2
@@ -236,5 +266,30 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "But keep in mind, this plugins work with
 SplitContainerItem"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SplitContainerItem10" type="Control" parent="."]
+clip_contents = true
+layout_mode = 2
+script = ExtResource("2_jlu11")
+
+[node name="ColorRect2" type="ColorRect" parent="SplitContainerItem10"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.304393, 0.507182, 1)
+
+[node name="Label" type="Label" parent="SplitContainerItem10"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Plugin create SplitContainerItem on added child and remove if has not childs, is that all..."
 horizontal_alignment = 1
 vertical_alignment = 1
