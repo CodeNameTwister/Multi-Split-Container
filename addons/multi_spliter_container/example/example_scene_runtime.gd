@@ -1,4 +1,11 @@
 extends Control
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#	https://github.com/CodeNameTwister/Multi-Split-Container
+#
+#	Multi-Split-Container addon for godot 4
+#	author:		"Twister"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 
 func _ready() -> void:
 	$Panel/Label.text = """Press DOWN button For Add Container Example

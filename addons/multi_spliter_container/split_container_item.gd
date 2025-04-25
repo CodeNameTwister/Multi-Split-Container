@@ -1,3 +1,4 @@
+@tool
 @icon("icon/MultiSpliterItem.svg")
 extends Control
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -18,6 +19,7 @@ func _on_gui_input(input : InputEvent) -> void:
 		show_splited_container()
 
 func _ready() -> void:
+	set_process(false)
 
 	size_flags_horizontal = Control.SIZE_FILL
 	size_flags_vertical = Control.SIZE_FILL
@@ -36,36 +38,40 @@ func _init() -> void:
 	child_entered_tree.connect(_on_child_entered_tree)
 
 func _on_child_entered_tree(n : Node) -> void:
-	if n is Control:
-		if !n.gui_input.is_connected(_on_gui_input):
-			n.gui_input.connect(_on_gui_input)
-	if Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
+		if n is Control:
+			if !n.gui_input.is_connected(_on_gui_input):
+				n.gui_input.connect(_on_gui_input)
+	else:
 		if n.owner == null:
-			if owner != null:
-				n.owner = owner
-			else:
-				var parent : Node = n.get_parent()
-				var current : Node = parent
-				while current != null:
-					parent = current
-					if parent.owner:
-						n.owner = parent.owner
-						break
-					current = current.get_parent()
-				if n.owner == null and parent != null:
-					n.owner = parent
+			n.owner = EditorInterface.get_edited_scene_root()
 	for x : Node in n.get_children():
 		_on_child_entered_tree(x)
 
-func _on_child_exiting_tree(n : Node) -> void:
+func _disconnect(n : Node) -> void:
 	if n is Control:
 		if n.gui_input.is_connected(_on_gui_input):
 			n.gui_input.disconnect(_on_gui_input)
 	for x : Node in n.get_children():
 		_on_child_exiting_tree(x)
 
+func _on_child_exiting_tree(n : Node) -> void:
+	if !Engine.is_editor_hint():
+		_disconnect(n)
+
 	if get_child_count() > 0:
 		if get_child(0) != n:
 			return
-	if !is_queued_for_deletion():
-		queue_free()
+
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		if owner == null:
+			if get_parent().owner:
+				owner = get_parent().owner
+			else:
+				owner = EditorInterface.get_edited_scene_root()
+		if get_child_count() > 0:
+			if is_queued_for_deletion():
+				cancel_free()
+			for x : Node in get_children():
+				_on_child_entered_tree(x)

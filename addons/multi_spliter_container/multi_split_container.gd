@@ -45,7 +45,14 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 			separator_line_color = root.get_theme_color("base_color", "Editor")
 		update()
 
-## Custom initial offset for separator lines.
+## Separator line visibility.
+@export var separator_line_visible : bool = true:
+	set(e):
+		separator_line_visible = e
+		for l : LineSep in _separators:
+			l.visible = separator_line_visible
+
+## Custom initial offset for separator lines. (TODO: Still Working here!)
 @export var separators_line_offsets : Array[float] :
 	set(e):
 		separators_line_offsets = e
@@ -55,19 +62,21 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 				separators_line_offsets.resize(_separators.size())
 		update()
 
-@export_group("Drag Button", "drag_button")
-## Size for drag button visible on split lines.
-#UPDATED: Change by icon.
-#@export var drag_button_offset_size : float = 0.0:
-	#set(e):
-		#drag_button_offset_size = e
-		#update()
+@export_subgroup("Drag Button", "drag_button")
 
 ## Set if drag button always be visible (Useful for test button size)
-@export var drag_button_visible : bool = false:
+@export var drag_button_always_visible : bool = false:
 	set(e):
-		drag_button_visible = e
-		update()
+		drag_button_always_visible = e
+
+		var min_visible_drag_button : float = 0.0
+		if drag_button_always_visible:
+			min_visible_drag_button = 0.4
+
+		for l : LineSep in _separators:
+			if l.button:
+				l.button.modulate.a = 0.0
+				l.button.min_no_focus_transparense = min_visible_drag_button
 
 ## Min size for drag button visible on split lines.
 @export_range(1.0, 200.0, 0.1) var drag_button_size : float = 24.0:
@@ -212,18 +221,35 @@ class DragButton extends Button:
 			_line_sep.mouse_default_cursor_shape = Control.CURSOR_HSPLIT
 			mouse_default_cursor_shape = Control.CURSOR_HSPLIT
 
-	func _init(line_sep : LineSep) -> void:
-		modulate.a = 0.0
+	func set_line(line_sep : LineSep) -> void:
+		if _line_sep:
+			if _line_sep.mouse_entered.is_connected(_on_enter):
+				_line_sep.mouse_entered.disconnect(_on_enter)
+			if _line_sep.mouse_exited.is_connected(_on_exit):
+				_line_sep.mouse_exited.disconnect(_on_exit)
+			if _line_sep.gui_input.is_connected(_on_input):
+				_line_sep.gui_input.disconnect(_on_input)
+
 		_line_sep = line_sep
+
+		if _line_sep:
+			if !_line_sep.mouse_entered.is_connected(_on_enter):
+				_line_sep.mouse_entered.connect(_on_enter.bind(1))
+			if !_line_sep.mouse_exited.is_connected(_on_exit):
+				_line_sep.mouse_exited.connect(_on_exit.bind(1))
+			if !_line_sep.gui_input.is_connected(_on_input):
+				_line_sep.gui_input.connect(_on_input)
+
+
+	func _init(line_sep : LineSep = null) -> void:
+		modulate.a = 0.0
+
+		set_line(line_sep)
+
 		button_down.connect(_on_press)
 		button_up.connect(_out_press)
-
 		mouse_entered.connect(_on_enter.bind(0))
 		mouse_exited.connect(_on_exit.bind(0))
-		_line_sep.mouse_entered.connect(_on_enter.bind(1))
-		_line_sep.mouse_exited.connect(_on_exit.bind(1))
-
-		_line_sep.gui_input.connect(_on_input)
 
 		icon = SplitButton
 		icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -532,7 +558,7 @@ func _undoredo_do(ur : UndoredoSplit) -> void:
 			if owner:
 				_recuva(container, owner)
 			else:
-				_recuva(container, self)
+				_recuva(container, EditorInterface.get_edited_scene_root())
 		ur.object = container
 
 func _recuva(x : Node, _owner : Node) -> void:
@@ -541,6 +567,7 @@ func _recuva(x : Node, _owner : Node) -> void:
 	for z : Node in x.get_children():
 		if z.owner == null:
 			z.owner = _owner
+		_recuva(z, _owner)
 
 func _undoredo_undo(ur : UndoredoSplit) -> void:
 	if !is_instance_valid(ur):
@@ -577,7 +604,6 @@ func _update() -> void:
 						continue
 				else:
 					var container : SplitContainerItem = SplitContainerItem.new()
-					#remove_child(x)
 
 					add_child(container, true)
 
@@ -609,9 +635,8 @@ func _update() -> void:
 						if owner:
 							_recuva(container, owner)
 						else:
-							_recuva(container, self)
+							_recuva(container, EditorInterface.get_edited_scene_root())
 
-					#container.add_child(x)
 					x.reparent(container)
 					x = container
 
@@ -771,8 +796,6 @@ func _update() -> void:
 			x.position = x.initial_position
 
 			x.button.size = Vector2(drag_button_size, drag_button_size)
-			#if drag_button_offset_size != 0.0:
-				#x.button.size.y += drag_button_offset_size
 
 			x.set(&"size", vline_size)
 			x.update()
@@ -807,8 +830,6 @@ func _update() -> void:
 		#x.offset = 0.0
 
 		x.button.size = Vector2(drag_button_size, drag_button_size)
-		#if drag_button_offset_size != 0.0:
-			#x.button.size.y += drag_button_offset_size
 
 		x.row = current_row
 		x.position = x.initial_position
@@ -824,11 +845,12 @@ func _update() -> void:
 		x.size = size
 
 	var min_visible_drag_button : float = 0.0
-	if drag_button_visible:
+	if drag_button_always_visible:
 		min_visible_drag_button = 0.4
 
 	if _first:
 		for l : LineSep in _separators:
+			l.visible = separator_line_visible
 			l.color = separator_line_color
 			l.button.self_modulate = drag_button_modulate
 			l.button.min_no_focus_transparense = min_visible_drag_button
@@ -845,6 +867,7 @@ func _update() -> void:
 				break
 
 		for l : LineSep in _separators:
+			l.visible = separator_line_visible
 			l.color = separator_line_color
 			l.button.self_modulate = drag_button_modulate
 			l.button.min_no_focus_transparense = min_visible_drag_button

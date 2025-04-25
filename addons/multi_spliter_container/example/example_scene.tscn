@@ -14,9 +14,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_erthe")
 max_columns = 3
-separator_line_size = 23.085
+separator_line_size = 24.0
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
-drag_button_visible = true
+separators_line_offsets = Array[float]([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 drag_button_size = 32.0
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 
