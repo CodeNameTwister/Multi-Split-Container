@@ -951,10 +951,20 @@ func _on_exiting_tree() -> void:
 	if vp and vp.size_changed.is_connected(update):
 		vp.size_changed.disconnect(update)
 
+	var parent : Node = get_parent()
+	if parent is Control:
+		if parent.item_rect_changed.is_connected(update):
+			parent.item_rect_changed.disconnect(update)
+
 func _enter_tree() -> void:
 	var vp : Viewport = get_viewport()
 	if vp and !vp.size_changed.is_connected(update):
 		vp.size_changed.connect(update)
+
+	var parent : Node = get_parent()
+	if parent is Control:
+		if !parent.item_rect_changed.is_connected(update):
+			parent.item_rect_changed.connect(update)
 
 	if !tree_exiting.is_connected(_on_exiting_tree):
 		tree_exiting.connect(_on_exiting_tree)
