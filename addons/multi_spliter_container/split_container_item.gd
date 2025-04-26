@@ -25,9 +25,9 @@ func _ready() -> void:
 	size_flags_vertical = Control.SIZE_FILL
 
 	set_deferred(&"anchor_left", 0.0)
-	set_deferred(&"aanchor_top", 0.0)
-	set_deferred(&"aanchor_bottom", 1.0)
-	set_deferred(&"aanchor_right", 1.0)
+	set_deferred(&"anchor_top", 0.0)
+	set_deferred(&"anchor_bottom", 1.0)
+	set_deferred(&"anchor_right", 1.0)
 
 func _init() -> void:
 	name = "SplitContainerItem"

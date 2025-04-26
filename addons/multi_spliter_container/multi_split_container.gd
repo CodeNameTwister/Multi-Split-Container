@@ -532,11 +532,12 @@ class LineSep extends ColorRect:
 
 	func _init() -> void:
 		color = Color.RED
-		button = DragButton.new(self)
-		add_child(button)
 
 	func _ready() -> void:
 		name = "SplitLine"
+		if button == null:
+			button = DragButton.new(self)
+			add_child(button, false, Node.INTERNAL_MODE_BACK)
 
 func _test() -> void:
 	queue_redraw()
@@ -579,6 +580,10 @@ func _undoredo_do(ur : UndoredoSplit) -> void:
 		ur.object = container
 
 func _recuva(x : Node, _owner : Node) -> void:
+	if x is DragButton:
+		return
+	elif x is LineSep:
+		return
 	if x.owner == null:
 		x.owner = _owner
 	for z : Node in x.get_children():
@@ -619,6 +624,9 @@ func _update() -> void:
 					else:
 						x.queue_free()
 						continue
+				elif x is DragButton or x is LineSep:
+					x.queue_free()
+					continue
 				else:
 					var container : SplitContainerItem = SplitContainerItem.new()
 
@@ -904,6 +912,7 @@ func _update() -> void:
 				break
 
 func _on_enter(n : Node) -> void:
+	n.is_inside_tree()
 	if n is SplitContainerItem or (n is Control and !Engine.is_editor_hint()):
 		if !n.visibility_changed.is_connected(_on_visible):
 			n.visibility_changed.connect(_on_visible)
@@ -961,9 +970,9 @@ func _ready() -> void:
 	size_flags_vertical =Control.SIZE_EXPAND_FILL
 
 	set_deferred(&"anchor_left", 0.0)
-	set_deferred(&"aanchor_top", 0.0)
-	set_deferred(&"aanchor_bottom", 1.0)
-	set_deferred(&"aanchor_right", 1.0)
+	set_deferred(&"anchor_top", 0.0)
+	set_deferred(&"anchor_bottom", 1.0)
+	set_deferred(&"anchor_right", 1.0)
 
 	if Engine.is_editor_hint():
 		draw.connect(_on_draw)
