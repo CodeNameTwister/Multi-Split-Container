@@ -35,6 +35,7 @@ size_flags_vertical = 3
 script = ExtResource("1_q7yv4")
 max_columns = 2
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
+behaviour_can_expand_focus_same_container = true
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 metadata/_custom_type_script = "uid://db6mrqis6mthu"
 
@@ -181,6 +182,9 @@ size_flags_vertical = 3
 script = ExtResource("1_q7yv4")
 max_columns = 1
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
+behaviour_can_expand_focus_same_container = null
+behaviour_expand_smoothed = null
+behaviour_expand_smoothed_time = null
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 metadata/_custom_type_script = "uid://db6mrqis6mthu"
 

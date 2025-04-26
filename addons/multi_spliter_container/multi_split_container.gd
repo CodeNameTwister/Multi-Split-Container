@@ -53,7 +53,6 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 			l.visible = separator_line_visible
 
 @export_subgroup("Behaviour", "behaviour_")
-
 ## Enable function for auto expand lines container on inside focus.
 @export var behaviour_expand_on_focus : bool = true
 
@@ -63,6 +62,26 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 		behaviour_expand_on_double_click = e
 		for l : LineSep in _separators:
 			l.double_click_handler = behaviour_expand_on_double_click
+
+## This allow expand you current focused container if you shrunk it.
+@export var behaviour_can_expand_focus_same_container : bool = false
+
+## Enable smooth when expand container.
+@export var behaviour_expand_smoothed : bool = true:
+	set(e):
+		behaviour_expand_smoothed = e
+		if !e:
+			if _tween and _tween.is_running():
+				_tween.kill()
+			_tween = null
+
+## Time speed duration for reset expand container.
+@export_range(0.01, 1000.0, 0.01) var behaviour_expand_smoothed_time : float = 0.24:
+	set(e):
+		behaviour_expand_smoothed_time = maxf(0.01, e)
+		if _tween and _tween.is_running():
+			_tween.kill()
+		_tween = null
 
 ## Custom initial offset for separator lines. (TODO: Still Working here!)
 @export var separators_line_offsets : Array[float] :
@@ -116,6 +135,7 @@ var _separators : Array[LineSep] = []
 var _last_container_focus : Node = null
 var _frame : int = 1
 var _first : bool = true
+var _tween : Tween = null
 
 #region __editor__
 var _last_undoredo : UndoredoSplit = null
@@ -129,12 +149,12 @@ func get_line_seperator_left_offset_limit(index : int) -> float:
 			if index < 1:
 				return -_separators[index].initial_position.x
 			var next : LineSep = _separators[index - 1]
-			return (next.initial_position.x + next.size.x) - _separators[index].initial_position.x
+			return (next.initial_position.x + (next.size.x/2.0)) - _separators[index].initial_position.x
 		else:
 			if index < 1:
 				return -_separators[index].initial_position.y
 			var next : LineSep = _separators[index - 1]
-			return (next.initial_position.y + next.size.y) - _separators[index].initial_position.y
+			return (next.initial_position.y + (next.size.y/2.0)) - _separators[index].initial_position.y
 	push_warning("[PLUGIN] Not valid index for line separator!")
 	return 0.0
 
@@ -144,20 +164,31 @@ func get_line_seperator_right_offset_limit(index : int) -> float:
 		var line_sep : LineSep = _separators[index]
 		if !line_sep.is_vertical:
 			if index + 1 == _separators.size():
-				return size.x -_separators[index].initial_position.x
+				return (size.x/2.0) -_separators[index].initial_position.x
 			var current : LineSep = _separators[index]
-			return (_separators[index + 1].initial_position.x - current.initial_position.x + current.size.x)
+			return (_separators[index + 1].initial_position.x - current.initial_position.x + (current.size.x/2.0))
 		else:
 			if index + 1 == _separators.size():
 				return size.x -_separators[index].initial_position.y
 			var current : LineSep = _separators[index]
-			return (_separators[index + 1].initial_position.y - current.initial_position.y + current.size.y)
+			return (_separators[index + 1].initial_position.y - current.initial_position.y + (current.size.y/2.0))
 	push_warning("[PLUGIN] Not valid index for line separator!")
 	return 0.0
+
+# This is function is util when you want expand or constraint manualy offset.
+## Update offset of the line
+func update_line_separator_offset(index : int, offset : float) -> void:
+	var line_sep : LineSep = _separators[index]
+	line_sep.offset = offset
+	line_sep.force_update()
 
 ## Get total line count.
 func get_line_separator_count() -> int:
 	return _separators.size()
+
+## Get Line reference by index, see get_line_separator_count()
+func get_line_separator(index : int) -> LineSep:
+	return _separators[index]
 
 ## Get if line separator is vertical.
 func is_vertical_line_separator(index : int) -> bool:
@@ -168,27 +199,49 @@ func is_vertical_line_separator(index : int) -> bool:
 
 ## Expand splited container by index container.
 func expand_splited_container(node : Node) -> void:
-	if _last_container_focus == node:
+	var same : bool = _last_container_focus == node
+
+	if same and !behaviour_can_expand_focus_same_container:
 		return
+
 	_last_container_focus = node
 
 	if !behaviour_expand_on_focus:
 		return
 
+	if _tween and _tween.is_running():
+		if same:
+			return
+		_tween.kill()
+		_tween = null
+
 	var top_lines : Array[LineSep] = []
 	var bottom_lines : Array[LineSep] = []
 
+	var update_required : bool = false
+
 	for line : LineSep in _separators:
 		if node in line.top_items:
+			update_required = update_required or line.offset < 0.0
 			top_lines.append(line)
 		elif node in line.bottom_items:
+			update_required = update_required or line.offset > 0.0
 			bottom_lines.append(line)
+
+	if update_required:
+		if behaviour_expand_smoothed:
+			_tween = get_tree().create_tween()
+			_tween.tween_method(_reset_expanded_lines.bind(top_lines, bottom_lines), 0.0, 1.0, behaviour_expand_smoothed_time)
+		else:
+			_reset_expanded_lines(1.0, top_lines, bottom_lines)
+
+func _reset_expanded_lines(lerp : float, top_lines : Array[LineSep], bottom_lines : Array[LineSep]) -> void:
 	for line : LineSep in top_lines:
 		if line.offset < 0.0:
-			line.offset = 0.0
+			line.offset = lerp(line.offset, 0.0, lerp)
 	for line : LineSep in bottom_lines:
 		if line.offset > 0.0:
-			line.offset = 0.0
+			line.offset = lerp(line.offset, 0.0, lerp)
 
 	for line : LineSep in top_lines:
 		line.force_update()
