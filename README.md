@@ -16,6 +16,7 @@ Allow splitting elements into containers with the same size in the canvas rectan
 * Drag Button Icon Changeables.
 * Reset offset splited container on double click on line.
 * Auto show content on focus.
+* Smooth Expand Container.
 
 
 # Preview
