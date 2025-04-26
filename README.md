@@ -19,10 +19,13 @@ Allow splitting elements into containers with the same size in the canvas rectan
 
 
 # Preview
-### Image Example Scene.
+### Video Example Scene.
 [![video preview](https://github.com/CodeNameTwister/Misc/blob/main/media/video/gd_msc.png?raw=true)](https://youtu.be/5JU3snjbRMU)
 ### Image Example Scene before/after move splited container by drag buttons.
 ![image_preview2](images/example_full.png)
+### Image Example Scene 2 nested child.
+![image_preview2](images/example_wchild.png)
+
 
 # How Work
 After enable this plugin, you can see the new node called **MultiSplitContainer**.
