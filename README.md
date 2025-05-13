@@ -34,6 +34,9 @@ After enable this plugin, you can see the new node called **MultiSplitContainer*
 
 This node automatically creates a **SplitContainerItem** node that will be managed by **MultiSplitContainer** for split/resize.
 
+### Custom Separator Line Offset
+Modify the values ​​to set a custom offset, each box of the array represents in order a line starting from the first container to the last.
+
 # Nodes
 
 >[!TIP]
