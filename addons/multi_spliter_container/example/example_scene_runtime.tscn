@@ -44,5 +44,6 @@ size_flags_vertical = 3
 script = ExtResource("2_iutt7")
 max_columns = 5
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
+_rect_size_editor = Vector2(1152, 648)
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 metadata/_custom_type_script = "uid://db6mrqis6mthu"

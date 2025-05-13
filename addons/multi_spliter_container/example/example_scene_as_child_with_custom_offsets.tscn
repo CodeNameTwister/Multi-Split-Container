@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cp2b7c6ttxv2p"]
+[gd_scene load_steps=7 format=3 uid="uid://bxgosuocnk2pp"]
 
-[ext_resource type="Script" uid="uid://db6mrqis6mthu" path="res://addons/multi_spliter_container/multi_split_container.gd" id="1_q7yv4"]
-[ext_resource type="Script" uid="uid://beplmlbkjbofd" path="res://addons/multi_spliter_container/split_container_item.gd" id="2_xa37v"]
-[ext_resource type="Texture2D" uid="uid://bjaei3q7x2hux" path="res://addons/multi_spliter_container/icon/MultiSpliter.svg" id="3_pt6aj"]
-[ext_resource type="Texture2D" uid="uid://cwvyucfkxwjqw" path="res://addons/multi_spliter_container/icon/MultiSpliterItem.svg" id="4_xa37v"]
+[ext_resource type="Script" uid="uid://db6mrqis6mthu" path="res://addons/multi_spliter_container/multi_split_container.gd" id="1_hf1r7"]
+[ext_resource type="Script" uid="uid://beplmlbkjbofd" path="res://addons/multi_spliter_container/split_container_item.gd" id="2_uhw85"]
+[ext_resource type="Texture2D" uid="uid://bjaei3q7x2hux" path="res://addons/multi_spliter_container/icon/MultiSpliter.svg" id="3_kuapk"]
+[ext_resource type="Texture2D" uid="uid://cwvyucfkxwjqw" path="res://addons/multi_spliter_container/icon/MultiSpliterItem.svg" id="4_82k4v"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_82db5"]
 font_size = 24
@@ -32,11 +32,11 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_q7yv4")
+script = ExtResource("1_hf1r7")
 max_columns = 2
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
 behaviour_can_expand_focus_same_container = true
-separators_line_offsets = Array[float]([0.0, 0.0, 0.0])
+separators_line_offsets = Array[float]([150.0, 32.0, -150.0])
 _rect_size_editor = Vector2(1152, 648)
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 metadata/_custom_type_script = "uid://db6mrqis6mthu"
@@ -44,7 +44,7 @@ metadata/_custom_type_script = "uid://db6mrqis6mthu"
 [node name="SplitContainerItem" type="Control" parent="MultiSplitContainer"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -64,7 +64,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_pt6aj")
+texture = ExtResource("3_kuapk")
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="MultiSplitContainer/SplitContainerItem"]
@@ -80,7 +80,11 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Try Change Max Columns
+text = "Try Change
+
+\"Separators Line Offsets\"
+in the inspector
+
 Container 1"
 label_settings = SubResource("LabelSettings_82db5")
 horizontal_alignment = 1
@@ -88,7 +92,7 @@ horizontal_alignment = 1
 [node name="SplitContainerItem2" type="Control" parent="MultiSplitContainer"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem2"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -107,7 +111,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_xa37v")
+texture = ExtResource("4_82k4v")
 expand_mode = 1
 stretch_mode = 5
 
@@ -129,7 +133,7 @@ text = "Container 2"
 [node name="SplitContainerItem3" type="Control" parent="MultiSplitContainer"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem3"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -148,7 +152,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_xa37v")
+texture = ExtResource("4_82k4v")
 expand_mode = 1
 stretch_mode = 5
 
@@ -170,7 +174,7 @@ text = "Container 3"
 [node name="SplitContainerItem4" type="Control" parent="MultiSplitContainer"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="MultiSplitContainer2" type="Container" parent="MultiSplitContainer/SplitContainerItem4"]
 layout_mode = 1
@@ -181,7 +185,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_q7yv4")
+script = ExtResource("1_hf1r7")
 max_columns = 1
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
 separators_line_offsets = Array[float]([-22.0, 22.0])
@@ -192,7 +196,7 @@ metadata/_custom_type_script = "uid://db6mrqis6mthu"
 [node name="SplitContainerItem" type="Control" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2/SplitContainerItem"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -212,7 +216,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_xa37v")
+texture = ExtResource("4_82k4v")
 expand_mode = 1
 stretch_mode = 5
 
@@ -237,7 +241,7 @@ horizontal_alignment = 1
 [node name="SplitContainerItem2" type="Control" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2/SplitContainerItem2"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -256,7 +260,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_xa37v")
+texture = ExtResource("4_82k4v")
 expand_mode = 1
 stretch_mode = 5
 
@@ -278,7 +282,7 @@ text = "Sub Container 2"
 [node name="SplitContainerItem3" type="Control" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2"]
 clip_contents = true
 layout_mode = 2
-script = ExtResource("2_xa37v")
+script = ExtResource("2_uhw85")
 
 [node name="ColorRect" type="ColorRect" parent="MultiSplitContainer/SplitContainerItem4/MultiSplitContainer2/SplitContainerItem3"]
 self_modulate = Color(0.783524, 0.783523, 0.783523, 1)
@@ -297,7 +301,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_xa37v")
+texture = ExtResource("4_82k4v")
 expand_mode = 1
 stretch_mode = 5
 

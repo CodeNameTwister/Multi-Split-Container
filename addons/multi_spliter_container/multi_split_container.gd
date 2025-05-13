@@ -19,9 +19,9 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 	set(e):
 		max_columns = maxi(0, e)
 
-		if Engine.is_editor_hint():
-			for x : int in range(separators_line_offsets.size()):
-				separators_line_offsets[x] = 0.0
+		#if Engine.is_editor_hint():
+			#for x : int in range(separators_line_offsets.size()):
+				#separators_line_offsets[x] = 0.0
 		for x : LineSep in _separators:
 			x.queue_free()
 
@@ -41,7 +41,7 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 	set(e):
 		separator_line_color = e
 		if separator_line_color == Color.MAGENTA: # That color reminds me of texture not found errors.
-			var root = EditorInterface.get_base_control()
+			var root : Control = EditorInterface.get_base_control()
 			separator_line_color = root.get_theme_color("base_color", "Editor")
 		update()
 
@@ -83,15 +83,21 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 			_tween.kill()
 		_tween = null
 
-## Custom initial offset for separator lines. (TODO: Still Working here!)
+## Custom initial offset for separator lines.
 @export var separators_line_offsets : Array[float] :
 	set(e):
 		separators_line_offsets = e
 
-		if Engine.is_editor_hint():
+		if Engine.is_editor_hint() and is_node_ready():
 			if separators_line_offsets.size() != _separators.size():
 				separators_line_offsets.resize(_separators.size())
 		update()
+		
+@export_storage var _rect_size_editor : Vector2 = Vector2i.ZERO:
+	get:
+		if _rect_size_editor == Vector2.ZERO:
+			_rect_size_editor = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
+		return _rect_size_editor
 
 @export_subgroup("Drag Button", "drag_button")
 
@@ -133,7 +139,6 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 
 var _separators : Array[LineSep] = []
 var _last_container_focus : Node = null
-var _frame : int = 1
 var _first : bool = true
 var _tween : Tween = null
 
@@ -220,13 +225,31 @@ func expand_splited_container(node : Node) -> void:
 
 	var update_required : bool = false
 
-	for line : LineSep in _separators:
-		if node in line.top_items:
-			update_required = update_required or line.offset < 0.0
-			top_lines.append(line)
-		elif node in line.bottom_items:
-			update_required = update_required or line.offset > 0.0
-			bottom_lines.append(line)
+	if separators_line_offsets.size() > 0:
+		for x : int in range(0, _separators.size(), 1):
+			var line : LineSep = _separators[x]
+			if x < separators_line_offsets.size():
+				if node in line.top_items:
+					update_required = update_required or line.offset < _get_custom_offset(x, line.is_vertical)
+					top_lines.append(line)
+				elif node in line.bottom_items:
+					update_required = update_required or line.offset > _get_custom_offset(x, line.is_vertical)
+					bottom_lines.append(line)
+			else:
+				if node in line.top_items:
+					update_required = update_required or line.offset < 0.0
+					top_lines.append(line)
+				elif node in line.bottom_items:
+					update_required = update_required or line.offset > 0.0
+					bottom_lines.append(line)
+	else:
+		for line : LineSep in _separators:
+			if node in line.top_items:
+				update_required = update_required or line.offset < 0.0
+				top_lines.append(line)
+			elif node in line.bottom_items:
+				update_required = update_required or line.offset > 0.0
+				bottom_lines.append(line)
 
 	if update_required:
 		if behaviour_expand_smoothed:
@@ -235,18 +258,58 @@ func expand_splited_container(node : Node) -> void:
 		else:
 			_reset_expanded_lines(1.0, top_lines, bottom_lines)
 
-func _reset_expanded_lines(lerp : float, top_lines : Array[LineSep], bottom_lines : Array[LineSep]) -> void:
-	for line : LineSep in top_lines:
-		if line.offset < 0.0:
-			line.offset = lerp(line.offset, 0.0, lerp)
-	for line : LineSep in bottom_lines:
-		if line.offset > 0.0:
-			line.offset = lerp(line.offset, 0.0, lerp)
+func _reset_expanded_lines(lerp_value : float, top_lines : Array[LineSep], bottom_lines : Array[LineSep]) -> void:
+	
+	if separators_line_offsets.size() > 0:
+		for iline : int in range(top_lines.size() - 1, -1, -1):
+			var line : LineSep = top_lines[iline]
+			if is_instance_valid(line):
+				var index : int = _separators.find(line)
+				if index < separators_line_offsets.size():
+					var custom_offset : float = _get_custom_offset(index, line.is_vertical)
+					if line.offset < custom_offset:
+						line.offset = lerp(line.offset, custom_offset, lerp_value)
+				else:
+					if line.offset < 0.0:
+						line.offset = lerp(line.offset, 0.0, lerp_value)
+			else:
+				top_lines.remove_at(iline)
+				
+		for iline : int in range(bottom_lines.size() - 1, -1, -1):
+			var line : LineSep = bottom_lines[iline]
+			if is_instance_valid(line):
+				var index : int = _separators.find(line)
+				if index < separators_line_offsets.size():
+					var custom_offset : float = _get_custom_offset(index, line.is_vertical)
+					if line.offset > custom_offset:
+						line.offset = lerp(line.offset, custom_offset, lerp_value)
+				else:
+					if line.offset > 0.0:
+						line.offset = lerp(line.offset, 0.0, lerp_value)
+			else:
+				bottom_lines.remove_at(iline)
+	else:
+		for iline : int in range(top_lines.size() - 1, -1, -1):
+			var line : LineSep = top_lines[iline]
+			if is_instance_valid(line):
+				if line.offset < 0.0:
+					line.offset = lerp(line.offset, 0.0, lerp_value)
+			else:
+				top_lines.remove_at(iline)
+				
+		for iline : int in range(bottom_lines.size() - 1, -1, -1):
+			var line : LineSep = bottom_lines[iline]
+			if is_instance_valid(line):
+				if line.offset > 0.0:
+					line.offset = lerp(line.offset, 0.0, lerp_value)
+			else:
+				bottom_lines.remove_at(iline)
 
 	for line : LineSep in top_lines:
 		line.force_update()
 	for line : LineSep in bottom_lines:
 		line.force_update()
+
 
 ## Get initial position of a separator line.
 func get_line_separator_initial_position(index : int) -> Vector2:
@@ -431,6 +494,7 @@ class LineSep extends ColorRect:
 	var row : int = 0
 
 	var initial_position : Vector2 = Vector2.ZERO
+	
 	var offset : float = 0.0
 
 	var min_size_offset : float = 0.0
@@ -454,7 +518,6 @@ class LineSep extends ColorRect:
 
 	func reset() -> void:
 		position = initial_position
-		#offset = 0.0
 		update_items()
 
 	func update_items() -> void:
@@ -870,7 +933,6 @@ func _update() -> void:
 
 			x.initial_position = vpos
 			x.initial_position.y -= (vline_size.y) / 2.0
-			#x.offset = 0.0
 			x.position = x.initial_position
 
 			x.button.size = Vector2(drag_button_size, drag_button_size)
@@ -905,7 +967,6 @@ func _update() -> void:
 
 		x.initial_position = vpos
 		x.initial_position.x -= (line_size.x) / 2.0
-		#x.offset = 0.0
 
 		x.button.size = Vector2(drag_button_size, drag_button_size)
 
@@ -939,11 +1000,16 @@ func _update() -> void:
 
 	else:
 		if separators_line_offsets.size() > 0:
-			for l : int in range(0, _separators.size(), 1):
-				if l < separators_line_offsets.size():
-					_separators[l].offset = separators_line_offsets[l]
-					continue
-				break
+			if Engine.is_editor_hint():
+				for l : int in range(0, _separators.size(), 1):
+					if l < separators_line_offsets.size():
+						_separators[l].offset = separators_line_offsets[l]
+						continue
+					break
+			else:
+				for l : int in range(0, _separators.size(), 1):
+					var line : LineSep = _separators[l]
+					line.offset = _get_custom_offset(l, line.is_vertical)
 
 		for l : LineSep in _separators:
 			l.visible = separator_line_visible
@@ -955,9 +1021,7 @@ func _update() -> void:
 
 			l.force_update()
 
-		if !Engine.is_editor_hint():
-			separators_line_offsets.clear()
-		else:
+		if Engine.is_editor_hint():
 			for l : int in range(0, _separators.size(), 1):
 				if l < separators_line_offsets.size():
 					separators_line_offsets[l] = _separators[l].offset
@@ -969,9 +1033,9 @@ func _on_enter(n : Node) -> void:
 	if n is SplitContainerItem or (n is Control and !Engine.is_editor_hint()):
 		if !n.visibility_changed.is_connected(_on_visible):
 			n.visibility_changed.connect(_on_visible)
-		if is_node_ready():
-			for x : int in range(separators_line_offsets.size()):
-				separators_line_offsets[x] = 0.0
+		#if Engine.is_editor_hint() and is_node_ready():
+			#for x : int in range(separators_line_offsets.size()):
+				#separators_line_offsets[x] = 0.0
 		update()
 
 func _on_visible() -> void:
@@ -980,19 +1044,28 @@ func _on_visible() -> void:
 func _on_exiting(n : Node) -> void:
 	if n is SplitContainerItem or (n is Control and !Engine.is_editor_hint()):
 		if is_node_ready():
-			for x : int in range(separators_line_offsets.size()):
-				separators_line_offsets[x] = 0.0
+			#if Engine.is_editor_hint():
+				#for x : int in range(separators_line_offsets.size()):
+					#separators_line_offsets[x] = 0.0
 			for x : LineSep in _separators:
 				x.offset = 0.0
 		if n.visibility_changed.is_connected(_on_visible):
 			n.visibility_changed.disconnect(_on_visible)
 		update()
 
+func _get_custom_offset(index : int, vertical : bool) -> float:
+	if separators_line_offsets.size() > index:
+		var root : Vector2 = _rect_size_editor
+		if root != Vector2.ZERO:
+			var current_size : Vector2 = Vector2(get_viewport().size) / Vector2(root)
+			if vertical:
+				return separators_line_offsets[index] * current_size.y
+			else:
+				return separators_line_offsets[index] * current_size.x
+	return 0.0
+
 func _process(__ : float) -> void:
 	if is_node_ready():
-		if _frame > 0:
-			_frame -= 1
-			return
 		_update()
 		if _first:
 			_first = false
@@ -1039,6 +1112,9 @@ func _ready() -> void:
 
 	if Engine.is_editor_hint():
 		draw.connect(_on_draw)
+		
+		if separators_line_offsets.size() > get_child_count():
+			separators_line_offsets.resize(get_child_count())
 
 	if _first:
 		update()

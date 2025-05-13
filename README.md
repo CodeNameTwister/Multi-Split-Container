@@ -17,6 +17,7 @@ Allow splitting elements into containers with the same size in the canvas rectan
 * Reset offset splited container on double click on line.
 * Auto show content on focus.
 * Smooth Expand Container.
+* Custom Initial Offset.
 
 
 # Preview
