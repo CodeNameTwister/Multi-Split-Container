@@ -95,7 +95,7 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 		
 @export_storage var _rect_size_editor : Vector2 = Vector2i.ZERO:
 	get:
-		if _rect_size_editor == Vector2.ZERO:
+		if Engine.is_editor_hint() or _rect_size_editor == Vector2.ZERO:
 			_rect_size_editor = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
 		return _rect_size_editor
 
