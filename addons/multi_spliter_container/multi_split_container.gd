@@ -101,19 +101,15 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 
 @export_subgroup("Drag Button", "drag_button")
 
-## Set if drag button always be visible (Useful for test button size)
-@export var drag_button_always_visible : bool = false:
+## Min opacity of drag button when not in focus.
+@export var drag_button_min_opacity : float = 0.0:
 	set(e):
-		drag_button_always_visible = e
-
-		var min_visible_drag_button : float = 0.0
-		if drag_button_always_visible:
-			min_visible_drag_button = 0.4
-
+		drag_button_min_opacity = e
+		
 		for l : LineSep in _separators:
 			if l.button:
 				l.button.modulate.a = 0.0
-				l.button.min_no_focus_transparense = min_visible_drag_button
+				l.button.min_no_focus_transparense = e
 
 ## Min size for drag button visible on split lines.
 @export_range(1.0, 200.0, 0.1) var drag_button_size : float = 24.0:
@@ -983,17 +979,13 @@ func _update() -> void:
 	for x : Control in items:
 		x.size = size
 
-	var min_visible_drag_button : float = 0.0
-	if drag_button_always_visible:
-		min_visible_drag_button = 0.4
-
 	if _first:
 		for l : LineSep in _separators:
 			l.visible = separator_line_visible
 			l.color = separator_line_color
 			l.double_click_handler = behaviour_expand_on_double_click
 			l.button.self_modulate = drag_button_modulate
-			l.button.min_no_focus_transparense = min_visible_drag_button
+			l.button.min_no_focus_transparense = drag_button_min_opacity
 			l.button.set_drag_icon(drag_button_icon)
 
 			l.reset()
@@ -1016,7 +1008,7 @@ func _update() -> void:
 			l.color = separator_line_color
 			l.double_click_handler = behaviour_expand_on_double_click
 			l.button.self_modulate = drag_button_modulate
-			l.button.min_no_focus_transparense = min_visible_drag_button
+			l.button.min_no_focus_transparense = drag_button_min_opacity
 			l.button.set_drag_icon(drag_button_icon)
 
 			l.force_update()
