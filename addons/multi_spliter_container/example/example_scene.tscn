@@ -18,7 +18,8 @@ max_columns = 3
 separator_line_size = 23.085
 separator_line_color = Color(0.21, 0.24, 0.29, 1)
 separators_line_offsets = Array[float]([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-_rect_size_editor = Vector2i(1288, 745)
+_rect_size_editor = Vector2(1152, 648)
+drag_button_min_opacity = 0.2
 drag_button_size = 32.0
 drag_button_modulate = Color(0.605, 0.62, 0.645, 1)
 

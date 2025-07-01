@@ -102,7 +102,7 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 @export_subgroup("Drag Button", "drag_button")
 
 ## Min opacity of drag button when not in focus.
-@export var drag_button_min_opacity : float = 0.0:
+@export_range(0.0, 1.0, 0.01) var drag_button_min_opacity : float = 0.0:
 	set(e):
 		drag_button_min_opacity = e
 		
