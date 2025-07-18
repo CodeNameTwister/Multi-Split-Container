@@ -44,7 +44,7 @@ func _on_child_entered_tree(n : Node) -> void:
 				n.gui_input.connect(_on_gui_input)
 	else:
 		if n.owner == null:
-			n.owner = EditorInterface.get_edited_scene_root()
+			n.owner = Helpers.get_editor_interface().get_edited_scene_root()
 	for x : Node in n.get_children():
 		_on_child_entered_tree(x)
 
@@ -69,7 +69,7 @@ func _enter_tree() -> void:
 			if get_parent().owner:
 				owner = get_parent().owner
 			else:
-				owner = EditorInterface.get_edited_scene_root()
+				owner = Helpers.get_editor_interface().get_edited_scene_root()
 		if get_child_count() > 0:
 			if is_queued_for_deletion():
 				cancel_free()
