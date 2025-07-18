@@ -41,7 +41,7 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 	set(e):
 		separator_line_color = e
 		if separator_line_color == Color.MAGENTA: # That color reminds me of texture not found errors.
-			var root : Control = EditorInterface.get_base_control()
+			var root : Control = Helpers.get_editor_interface().get_base_control()
 			separator_line_color = root.get_theme_color("base_color", "Editor")
 		update()
 
@@ -123,7 +123,7 @@ const SplitButton : Texture = preload("res://addons/multi_spliter_container/icon
 		drag_button_modulate = e
 		if drag_button_modulate == Color.MAGENTA:
 			if Engine.is_editor_hint():
-				var root : Control = EditorInterface.get_base_control()
+				var root : Control = Helpers.get_editor_interface().get_base_control()
 				drag_button_modulate = root.get_theme_color("base_color", "Editor").lightened(0.5)
 		update()
 
@@ -688,7 +688,7 @@ func _undoredo_do(ur : UndoredoSplit) -> void:
 			if owner:
 				_recuva(container, owner)
 			else:
-				_recuva(container, EditorInterface.get_edited_scene_root())
+				_recuva(container, Helpers.get_editor_interface().get_edited_scene_root())
 		ur.object = container
 
 func _recuva(x : Node, _owner : Node) -> void:
@@ -745,7 +745,7 @@ func _update() -> void:
 					add_child(container, true)
 
 					if Engine.is_editor_hint():
-						var undoredo : EditorUndoRedoManager = EditorInterface.get_editor_undo_redo()
+						var undoredo = Helpers.get_editor_interface().get_editor_undo_redo()
 
 						var id : int = undoredo.get_object_history_id(x)
 						var _undoredo : UndoRedo = undoredo.get_history_undo_redo(id)
@@ -772,7 +772,7 @@ func _update() -> void:
 						if owner:
 							_recuva(container, owner)
 						else:
-							_recuva(container, EditorInterface.get_edited_scene_root())
+							_recuva(container, Helpers.get_editor_interface().get_edited_scene_root())
 
 					x.reparent(container)
 					x = container
